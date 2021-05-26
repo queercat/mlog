@@ -2,7 +2,7 @@
 {keywords:lotr, Lord of the Rings, End of Times}
 {style:style.css} %% This is the style we want to be used for this post. If not found it will pull from the global default. %%
 {title:the beginning of the end} %% This is the initial title to be displayed. %%
-{---} %% This is an element that fills a -----------... sized line across the page. %%
+{element:---} %% This is an element that fills a -----------... sized line across the page. %%
 
 The end comes soon. We hear drums, drums in the deep. They are coming. Three Rings for the Elven-kings under the sky,
 Seven for the Dwarf-lords in their halls of stone, Nine for Mortal Men doomed to die, One for the Dark Lord on his dark throne

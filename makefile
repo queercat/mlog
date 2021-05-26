@@ -1,5 +1,5 @@
 all:
-	g++ src/mlog.cpp -o bin/mlog
+	g++ src/mlog.cpp include/generator.h -o bin/mlog
 	./bin/mlog
 
 build:
