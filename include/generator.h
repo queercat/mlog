@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 #include <assert.h>
 
@@ -16,6 +18,10 @@ class Generator {
 
 		void read_config(std::fstream*, std::vector<std::string>*);
 		void parse_config(std::vector<std::string>*);
+
+		void generate_file_names(std::vector<std::string>*);
+
+		void generate_config();
 
 	public:
 		void generate_blog(const std::string&);
@@ -85,10 +91,9 @@ void Generator::parse_config(std::vector<std::string>* config_arguments) {
 	}
 }
 
-void Generator::generate_blog(const std::string& blog_location) {
-	std::string config_location = blog_location + "config.mconfig";
+void Generator::generate_config() {
+	std::string config_location = this->blog_location + "config.mconfig";
 
-	this->blog_location = blog_location;
 	this->config_location = config_location;
 
 	std::fstream config_file = this->open_file(config_location);
@@ -106,5 +111,25 @@ void Generator::generate_blog(const std::string& blog_location) {
 	this->parse_config(&config_arguments);
 
 	assert(config_arguments.empty());
+}
+
+void Generator::generate_file_names(std::vector<std::string>* file_names) {
+	std::string posts_location = this->blog_location + "posts/";
+
+	for (const auto & entry : fs::directory_iterator(posts_location)) {
+		file_names->push_back(entry.path().string());
+	}
+}
+
+void Generator::generate_blog(const std::string& blog_location) {
+	this->blog_location = blog_location;
+	this->generate_config();
+
 	assert(!this->config.empty());
+
+	std::vector<std::string> file_names;
+
+	this->generate_file_names(&file_names);
+
+	assert(!file_names.empty());
 }
