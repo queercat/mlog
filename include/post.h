@@ -114,8 +114,8 @@ void Post::generate_html() {
 		}
 	}
 
-	// Insert the title.
-
+	// Insert the header stuff and then tile.
+	this->html_body.push_back("<link rel=\"stylesheet\" href=\"" + this->style_location + "\">");
 	this->html_body.push_back("<h1>" + this->title + "</h1>");
 
 	for (std::string &line : this->post_body) {
@@ -132,6 +132,9 @@ void Post::generate_html() {
 
 			positions[i] = (int)found;
 		}
+
+		// toLower.
+		std::transform (line.begin(), line.end(), line.begin(), ::tolower);
 
 		if (is_valid) {
 			std::string argument = line.substr(positions[0] + 1, positions[2] - 1);
