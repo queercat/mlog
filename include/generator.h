@@ -8,6 +8,9 @@ namespace fs = std::filesystem;
 
 #include <assert.h>
 
+#include "behavior.h"
+#include "post.h"
+
 class Generator {
 	private:
 		std::string blog_location;
@@ -20,6 +23,7 @@ class Generator {
 		void parse_config(std::vector<std::string>*);
 
 		void generate_file_names(std::vector<std::string>*);
+		void generate_page_from_post(const std::string&);
 
 		void generate_config();
 
@@ -42,16 +46,11 @@ std::fstream Generator::open_file(const std::string& file_location) {
 void Generator::read_config(std::fstream* config_file, std::vector<std::string>* arguments) {
 	std::string line;
 
-	std::string l_bracket = "{";
-	std::string colon = ":";
-	std::string r_bracket = "}";
-
-	std::string valid_params[3] = {l_bracket, colon, r_bracket};
+	std::string valid_params[3] = {"{", ":", "}"};
 
 	while (std::getline(*config_file, line)) {
 		// Check if the line is a valid instruction. Will contain [:].
 		bool is_valid = true; 
-
 		int positions[3]; // Same order as valid_params.
 
 		for (int i = 0; i < 3; i++) {
@@ -121,6 +120,17 @@ void Generator::generate_file_names(std::vector<std::string>* file_names) {
 	}
 }
 
+void Generator::generate_page_from_post(const std::string& post_location) {
+	std::fstream post_file = this->open_file(post_location);
+	Post post;
+
+	post.generate_post_from_file(&post_file);
+
+	//assert(post.get_file_name() != "");
+
+	post_file.close();
+}
+
 void Generator::generate_blog(const std::string& blog_location) {
 	this->blog_location = blog_location;
 	this->generate_config();
@@ -132,4 +142,12 @@ void Generator::generate_blog(const std::string& blog_location) {
 	this->generate_file_names(&file_names);
 
 	assert(!file_names.empty());
+
+	std::string file_name;
+	while(!file_names.empty()) {
+		file_name = file_names.back();
+		file_names.pop_back();
+
+		this->generate_page_from_post(file_name, );
+	}
 }

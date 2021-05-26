@@ -1,9 +1,10 @@
 %% This will reference a comment and is not read by the parser. %%
-{keywords:lotr, Lord of the Rings, End of Times}
-{style:style.css} %% This is the style we want to be used for this post. If not found it will pull from the global default. %%
+{keywords:lotr,Lord of the Rings,End of Times}
+{style_location:style.css} %% This is the style we want to be used for this post. If not found it will pull from the global default. %%
 {title:the beginning of the end} %% This is the initial title to be displayed. %%
+{post_name:lord_of_the_rings}
+{BEGIN_POST}
 {element:---} %% This is an element that fills a -----------... sized line across the page. %%
-
 The end comes soon. We hear drums, drums in the deep. They are coming. Three Rings for the Elven-kings under the sky,
 Seven for the Dwarf-lords in their halls of stone, Nine for Mortal Men doomed to die, One for the Dark Lord on his dark throne
 In the Land of Mordor where the Shadows lie. One Ring to rule them all, One Ring to find them, One Ring to bring them all and in the darkness bind them
@@ -14,3 +15,4 @@ In the Land of Mordor where the Shadows lie.
 {header:In Conclusion}
 
 We will die and that is okay :)
+{END_POST}
