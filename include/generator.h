@@ -8,7 +8,6 @@ namespace fs = std::filesystem;
 
 #include <assert.h>
 
-#include "behavior.h"
 #include "post.h"
 
 class Generator {
@@ -124,9 +123,9 @@ void Generator::generate_page_from_post(const std::string& post_location) {
 	std::fstream post_file = this->open_file(post_location);
 	Post post;
 
-	post.generate_post_from_file(&post_file);
+	int success = post.generate_post_from_file(&post_file);
 
-	//assert(post.get_file_name() != "");
+	assert(success > 0);
 
 	post_file.close();
 }
@@ -148,6 +147,6 @@ void Generator::generate_blog(const std::string& blog_location) {
 		file_name = file_names.back();
 		file_names.pop_back();
 
-		this->generate_page_from_post(file_name, );
+		this->generate_page_from_post(file_name);
 	}
 }
