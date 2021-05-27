@@ -134,7 +134,7 @@ void Post::generate_html() {
 		}
 
 		// toLower.
-		std::transform (line.begin(), line.end(), line.begin(), ::tolower);
+		std::transform(line.begin(), line.end(), line.begin(), ::tolower);
 
 		if (is_valid) {
 			std::string argument = line.substr(positions[0] + 1, positions[2] - 1);

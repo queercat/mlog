@@ -1,4 +1,7 @@
 {include_directory:include}
+{post}
 {style_directory:style}
 {global_css_default:style.css}
-{output_directory:bin/output/}
+{output_directory:public/blog}
+{header:header.html}
+{footer:footer.html}
