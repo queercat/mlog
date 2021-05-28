@@ -7,13 +7,18 @@ ul {
 	font-family: 'VT323', monospace;
 }
 
-a:visited {
-	color: #1a0033;
-}
-
 a {
 	font-family: 'VT323', monospace;
 	color: #4f0099;
+	
+}
+
+a:visited {
+	color: #1a0033;
+	
+}
+
+a:link {
 }
 
 p {

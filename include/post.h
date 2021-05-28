@@ -14,6 +14,7 @@ class Post {
 		std::string output_location;
 		std::string include_location;
 		std::string style_location; // The location of the directory to the CSS (/styles/)
+		std::string post_output_location;
 
 		std::string header_location;
 		std::string footer_location;
@@ -26,7 +27,9 @@ class Post {
 		std::vector<std::string> post_body;
 		std::vector<std::string> html_body;
 
+		/* Meta information inside the post */
 		std::vector<std::string> keywords;
+		std::string post_date;
 
 		void generate_file_name();
 		void parse_file(std::fstream*);
@@ -37,7 +40,23 @@ class Post {
 
 	public:
 		Post* generate_post_from_file(std::fstream*, std::unordered_map<std::string, std::string>*);
+		
+		std::vector<std::string>* get_post_keywords();
+		std::string get_post_date();
+		std::string get_post_name();
 };
+
+std::vector<std::string>* Post::get_post_keywords() {
+	return &(this->keywords);
+}
+
+std::string Post::get_post_date() {
+	return this->post_date;
+}
+
+std::string Post::get_post_name() {
+	return this->post_name;
+}
 
 void Post::generate_file_name() {
 	this->file_name = this->post_name + ".html";
@@ -121,6 +140,10 @@ void Post::generate_html() {
 				this->generate_file_name();
 
 				assert(this->file_name != "");
+			}
+
+			if (key == "date") {
+				this->post_date = val;
 			}
 
 			if (key == "style_name") {
@@ -230,7 +253,7 @@ void Post::generate_html() {
 void Post::write_file() {
 	std::fstream file;
 
-	std::string output_path = fs::current_path().string() + "/" + this->output_location + this->file_name;
+	std::string output_path = fs::current_path().string() + "/" + this->post_output_location + this->output_location + this->file_name;
 	auto open_arguments = (std::fstream::in | std::fstream::out | std::fstream::trunc);
 
 	file.open(output_path, open_arguments);
@@ -245,6 +268,7 @@ void Post::write_file() {
 void Post::parse_config(std::unordered_map<std::string, std::string>* config) {
 	this->include_location = config->at("include_directory");
 	this->output_location = config->at("output_directory");
+	this->post_output_location = config->at("posts_directory");
 	this->style_location = config->at("style_directory");
 
 	this->style_name = config->at("style_default");

@@ -1,6 +1,6 @@
 %% This will reference a comment and is not read by the parser. %%
 {keywords:lotr,Lord of the Rings,End of Times}
-{date:5-27-2021}
+{date:5_27_2021}
 {style_location:style.css} %% This is the style we want to be used for this post. If not found it will pull from the global default. %%
 {title:the beginning of the end} %% This is the initial title to be displayed. %%
 {post_name:lord_of_the_rings}
