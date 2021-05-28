@@ -230,7 +230,7 @@ void Generator::generate_posts_page() {
 			}
 		}
 
-		if ((year_now - date_times[2] == 0) && (month_now - date_times[0] == 0) && (day_now - date_times[1] <= 7)) {
+		if ((year_now - date_times[2] == 0) && (month_now - date_times[0] == 0) && (day_now - date_times[1] <= 3)) {
 			is_new = "*new*";
 		}
 
@@ -253,7 +253,7 @@ void Generator::generate_posts_page() {
 
 	std::fstream posts_file;
 	std::string posts_file_path = fs::current_path().string() + "/" + config.at("output_directory") + "posts.html";
-	auto file_arguments = (std::fstream::in | std::fstream::out | std::fstream::app);
+	auto file_arguments = (std::fstream::in | std::fstream::out | std::fstream::trunc);
 
 	posts_file.open(posts_file_path, file_arguments);
 

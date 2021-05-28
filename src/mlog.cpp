@@ -11,7 +11,7 @@
  **/
 
 int main() {
-	std::string blog_location = "doc/";
+	std::string blog_location = "blog/";
 	Generator generator;
 
 	generator.generate_blog(blog_location);
