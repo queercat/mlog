@@ -1,6 +1,6 @@
-{include_directory:include}
-{style_directory:style}
+{include_directory:doc/include/}
+{style_directory:../style/}
 {style_default:style.css}
 {output_directory:doc/public/blog/}
-{header:header.html}
-{footer:footer.html}
+{header_path:header.html}
+{footer_path:footer.html}

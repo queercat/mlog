@@ -136,9 +136,9 @@ void Generator::generate_page_from_post(const std::string& post_location) {
 	std::fstream post_file = this->open_file(post_location);
 	Post post;
 
-	int success = post.generate_post_from_file(&post_file, &(this->config));
+	Post* success = post.generate_post_from_file(&post_file, &(this->config));
 
-	assert(success > 0);
+	assert(success != NULL);
 
 	post_file.close();
 }

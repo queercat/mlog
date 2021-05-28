@@ -13,13 +13,14 @@ class Post {
 
 		std::string output_location;
 		std::string include_location;
+		std::string style_location; // The location of the directory to the CSS (/styles/)
 
-		std::string style_location;
 		std::string header_location;
 		std::string footer_location;
 
 		std::string file_name;
 		std::string post_name;
+		std::string style_name; // The name of the CSS (style.css)
 
 		std::vector<std::string> post_head;
 		std::vector<std::string> post_body;
@@ -32,8 +33,10 @@ class Post {
 		void generate_html();
 		void write_file();
 
+		void parse_config(std::unordered_map<std::string, std::string>*);
+
 	public:
-		int generate_post_from_file(std::fstream*, std::unordered_map<std::string, std::string>*);
+		Post* generate_post_from_file(std::fstream*, std::unordered_map<std::string, std::string>*);
 };
 
 void Post::generate_file_name() {
@@ -120,15 +123,40 @@ void Post::generate_html() {
 				assert(this->file_name != "");
 			}
 
-			if (key == "style_location") {
-				this->style_location = val;
+			if (key == "style_name") {
+				this->style_name = val;
+
+				// As this is already set, if one isn't found it defaults to the one from our config.
+				assert(this->style_name != "");
 			}
 		}
 	}
 
-	// Insert the header stuff and then tile.
-	this->html_body.push_back("<link rel=\"stylesheet\" href=\"" + this->style_location + "\">");
-	this->html_body.push_back("<h1>" + this->title + "</h1>");
+	/* Adding header if it exists */
+	if (this->header_location != "") {
+		std::fstream header;
+		std::string header_path = fs::current_path().string() + "/" + this->include_location + this->header_location;
+
+		header.open(header_path, std::fstream::in);
+
+		std::string header_line;
+
+		while(std::getline(header, header_line)) {
+			this->html_body.push_back(header_line);
+		}
+
+		header.close();
+	}
+
+	/* Adding some style! */
+	std::string style = "<link rel=\"stylesheet\" href=\"" + style_location + style_name + "\">";
+
+	this->html_body.push_back(style);
+
+	/* Adding the title! */
+	std::string title = "<h2>" + this->title + "</h2>";
+
+	this->html_body.push_back(title);
 
 	for (std::string &line : this->post_body) {
 		bool is_valid = true;
@@ -180,6 +208,22 @@ void Post::generate_html() {
 		else {
 			this->html_body.push_back("<p>" + line + "</p>");
 		}
+	}
+
+	/* Adding footer if it exists */
+	if (this->footer_location != "") {
+		std::fstream footer;
+		std::string footer_path = this->include_location + this->footer_location;
+
+		footer.open(footer_path, std::fstream::in);
+
+		std::string footer_line;
+
+		while(std::getline(footer, footer_line)) {
+			this->html_body.push_back(footer_line);
+		}
+
+		footer.close();
 	}	
 }
 
@@ -187,7 +231,7 @@ void Post::write_file() {
 	std::fstream file;
 
 	std::string output_path = fs::current_path().string() + "/" + this->output_location + this->file_name;
-	auto open_arguments = (std::fstream::in | std::fstream::out | std::fstream::app);
+	auto open_arguments = (std::fstream::in | std::fstream::out | std::fstream::trunc);
 
 	file.open(output_path, open_arguments);
 
@@ -198,15 +242,47 @@ void Post::write_file() {
 	file.close();
 }
 
-int Post::generate_post_from_file(std::fstream* post_file, std::unordered_map<std::string, std::string>* config) {
-	assert(config != NULL);
-
+void Post::parse_config(std::unordered_map<std::string, std::string>* config) {
 	this->include_location = config->at("include_directory");
 	this->output_location = config->at("output_directory");
+	this->style_location = config->at("style_directory");
 
-	this->parse_file(post_file);	
+	this->style_name = config->at("style_default");
+
+	std::string tmp_header_location;
+	std::string tmp_footer_location;
+
+	try {
+		tmp_header_location = config->at("header_path");
+	}
+
+	catch (...) {
+		tmp_header_location = "";
+	}
+
+	this->header_location = tmp_header_location;
+
+	try {
+		tmp_footer_location = config->at("footer_path");
+	}
+
+	catch (...) {
+		tmp_footer_location = "";
+	}
+
+	this->footer_location = tmp_footer_location;
+}
+
+Post* Post::generate_post_from_file(std::fstream* post_file, std::unordered_map<std::string, std::string>* config) {
+	assert(config != NULL);
+
+	this->parse_config(config);
+
+	assert(this->include_location != "");
+
+	this->parse_file(post_file);
 	this->generate_html();
 	this->write_file();
 
-	return 1;
+	return this;
 }
