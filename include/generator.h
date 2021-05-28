@@ -253,7 +253,7 @@ void Generator::generate_posts_page() {
 
 	std::fstream posts_file;
 	std::string posts_file_path = fs::current_path().string() + "/" + config.at("output_directory") + "posts.html";
-	auto file_arguments = (std::fstream::in | std::fstream::out | std::fstream::trunc);
+	auto file_arguments = (std::fstream::in | std::fstream::out | std::fstream::app);
 
 	posts_file.open(posts_file_path, file_arguments);
 

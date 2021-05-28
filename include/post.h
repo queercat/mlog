@@ -253,8 +253,10 @@ void Post::generate_html() {
 void Post::write_file() {
 	std::fstream file;
 
-	std::string output_path = fs::current_path().string() + "/" + this->post_output_location + this->output_location + this->file_name;
-	auto open_arguments = (std::fstream::in | std::fstream::out | std::fstream::trunc);
+	std::string output_path = fs::current_path().string() + "/" + this->output_location + this->post_output_location + this->file_name;
+	auto open_arguments = (std::fstream::in | std::fstream::out | std::fstream::app);
+
+	std::cout << output_path << std::endl;
 
 	file.open(output_path, open_arguments);
 

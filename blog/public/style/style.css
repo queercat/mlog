@@ -1,0 +1,37 @@
+
+body {
+	background-color: #ffcccc;
+}
+
+ul {
+	font-family: 'VT323', monospace;
+}
+
+a {
+	font-family: 'VT323', monospace;
+	color: #4f0099;
+	
+}
+
+a:visited {
+	color: #1a0033;
+	
+}
+
+a:link {
+}
+
+p {
+	font-family: 'VT323', monospace;
+	color: #1a0033;
+}
+
+h1 {
+	font-family: 'VT323', monospace;
+	color: #1a0033;
+}
+
+h2 {
+	font-family: 'VT323', monospace;
+	color: #1a0033;
+}
