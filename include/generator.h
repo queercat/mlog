@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <filesystem>
+#include <tuple>
 namespace fs = std::filesystem;
 
 #include <assert.h>
@@ -28,7 +29,18 @@ class Generator {
 
 	public:
 		void generate_blog(const std::string&);
+
+		std::string get_blog_location();
+		std::unordered_map<std::string, std::string>* get_config();
 };
+
+std::string Generator::get_blog_location() {
+	return this->blog_location;
+}
+
+std::unordered_map<std::string, std::string>* Generator::get_config() {
+	return &(this->config);
+}
 
 std::fstream Generator::open_file(const std::string& file_location) {
 	std::fstream file;
@@ -112,6 +124,7 @@ void Generator::generate_config() {
 }
 
 void Generator::generate_file_names(std::vector<std::string>* file_names) {
+	// TODO: Set this to use the config.
 	std::string posts_location = this->blog_location + "posts/";
 
 	for (const auto & entry : fs::directory_iterator(posts_location)) {
@@ -123,7 +136,7 @@ void Generator::generate_page_from_post(const std::string& post_location) {
 	std::fstream post_file = this->open_file(post_location);
 	Post post;
 
-	int success = post.generate_post_from_file(&post_file);
+	int success = post.generate_post_from_file(&post_file, &(this->config));
 
 	assert(success > 0);
 

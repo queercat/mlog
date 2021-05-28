@@ -1,10 +1,18 @@
 #include <fstream>
 #include <filesystem>
+#include <unordered_map>
+#include <iostream>
+
+#include <assert.h>
+
 namespace fs = std::filesystem;
 
 class Post {
 	private:
 		std::string title;
+
+		std::string output_location;
+		std::string include_location;
 
 		std::string style_location;
 		std::string header_location;
@@ -25,7 +33,7 @@ class Post {
 		void write_file();
 
 	public:
-		int generate_post_from_file(std::fstream* post_file);
+		int generate_post_from_file(std::fstream*, std::unordered_map<std::string, std::string>*);
 };
 
 void Post::generate_file_name() {
@@ -57,6 +65,8 @@ void Post::parse_file(std::fstream* post_file) {
 			this->post_body.push_back(buffer_line);
 		}
 	}
+
+	assert(!post_body.empty());
 }
 
 void Post::generate_html() {
@@ -106,6 +116,8 @@ void Post::generate_html() {
 			if (key == "post_name") {
 				this->post_name = val;
 				this->generate_file_name();
+
+				assert(this->file_name != "");
 			}
 
 			if (key == "style_location") {
@@ -133,7 +145,7 @@ void Post::generate_html() {
 			positions[i] = (int)found;
 		}
 
-		// toLower.
+		// lowers the entire string.
 		std::transform(line.begin(), line.end(), line.begin(), ::tolower);
 
 		if (is_valid) {
@@ -174,7 +186,10 @@ void Post::generate_html() {
 void Post::write_file() {
 	std::fstream file;
 
-	file.open(fs::current_path().string() + "/TEST_OUTPUT.html", std::fstream::in | std::fstream::out | std::fstream::app);
+	std::string output_path = fs::current_path().string() + "/" + this->output_location + this->file_name;
+	auto open_arguments = (std::fstream::in | std::fstream::out | std::fstream::app);
+
+	file.open(output_path, open_arguments);
 
 	for (std::string &line : this->html_body) {
 		file << line << "\n";
@@ -183,7 +198,12 @@ void Post::write_file() {
 	file.close();
 }
 
-int Post::generate_post_from_file(std::fstream* post_file) {
+int Post::generate_post_from_file(std::fstream* post_file, std::unordered_map<std::string, std::string>* config) {
+	assert(config != NULL);
+
+	this->include_location = config->at("include_directory");
+	this->output_location = config->at("output_directory");
+
 	this->parse_file(post_file);	
 	this->generate_html();
 	this->write_file();
